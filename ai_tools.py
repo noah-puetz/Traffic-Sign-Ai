@@ -42,7 +42,7 @@ def load_data(height=30, width=30):
 
     # Einlesen der Bild-Datein
     for i in range(classes):
-        path = r"Traffic_Sign_Ai/Data/Train/{0}/".format(i)
+        path = r"Data/Train/{0}/".format(i)
         # print(path)
         image_class = os.listdir(path)
         for a in image_class:
@@ -77,19 +77,19 @@ def load_data(height=30, width=30):
 
 @st.cache(show_spinner=False)
 def load_model():
-    model = keras.models.load_model("Traffic_Sign_Ai/Traffic_Sign_Net")
+    model = keras.models.load_model("Traffic_Sign_Net")
 
     return model
 
 
 @st.cache(show_spinner=False)
 def load_test_data(height=30, width=30):
-    y_test = pd.read_csv(r'Traffic_Sign_Ai/Data/Test.csv', ";")
+    y_test = pd.read_csv(r'Data/Test.csv', ";")
     names = y_test['Filename'].to_numpy()
     y_test = y_test['ClassId'].values
     data = []
     for name in names:
-        image = cv2.imread(r'Traffic_Sign_Ai/Data/Test/' + name.replace('Test', ''))
+        image = cv2.imread(r'Data/Test/' + name.replace('Test', ''))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image_from_array = Image.fromarray(image, 'RGB')
         size_image = image_from_array.resize((height, width))
@@ -100,7 +100,7 @@ def load_test_data(height=30, width=30):
 def load_meta_data(height=30, width=30):
     meta_data = []
     for f in range(43):
-        image = cv2.imread("Traffic_Sign_Ai/Data/Meta/" + str(f) + ".png")
+        image = cv2.imread("Data/Meta/" + str(f) + ".png")
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image_from_array = Image.fromarray(image, 'RGB')
         meta_data.append(np.array(image_from_array))
