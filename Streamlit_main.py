@@ -34,27 +34,27 @@ with col1:
     '''The code and a report were developed in the course of a project at the University of Applied Sciences Cologne 
     in 2020. In 2022, I took up the project again to publish it as a streamlit web app. You can download the original 
     report here (by now it is only available in german). '''
-    with open("Traffic_Sign_Ai/Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf", "rb") as pdf_file:
+    with open("PDFs/Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf", "rb") as pdf_file:
         PDF = pdf_file.read()
 
     st.download_button(label="📥 Download the Project Report (german)",
                        data=PDF,
-                       file_name='Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf',)
+                       file_name='PDFs/Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf', )
     """If you would like to know more about me, you can either visit my LinkedIn, download my CV or contact me via 
     mail:
     """
     """
     📧 noah.c.puetz@gmail.com 
     """
-    with open("Traffic_Sign_Ai/CV_Noah_Puetz.pdf", "rb") as pdf_file:
+    with open("PDFs/CV_Noah_Puetz.pdf", "rb") as pdf_file:
         PDF = pdf_file.read()
 
     st.download_button(label="📥 Download my CV (english)",
                        data=PDF,
-                       file_name='Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf', )
+                       file_name='PDFs/Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf', )
 
     """
     I appreciate any feedback and have fun on the website! 😊
     """
 with col2:
-    st.image("Traffic_Sign_Ai/Data/Noah_Puetz_vertical.jpeg")
+    st.image("Data/Noah_Puetz_vertical.jpeg")
