@@ -27,7 +27,7 @@ sign_label = ["20 km/h", "30 km/h", "50 km/h", "60 km/h", "70 km/h", "80 km/h", 
               "Ende des Überholverbotes",
               "Ende des LKW-Überholverbotes"]
 
-model = keras.models.load_model("Traffic_Sign_Ai/Traffic_Sign_Net")
+model = keras.models.load_model("Traffic_Sign_Net")
 
 @st.cache(show_spinner=False)
 def load_data(height=30, width=30):
