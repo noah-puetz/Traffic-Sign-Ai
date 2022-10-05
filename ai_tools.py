@@ -8,15 +8,12 @@ import random
 import keras
 import os
 from sklearn.metrics import confusion_matrix
-import seaborn as sn
 from collections import Counter
 import plotly.express as px
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
-from streamlit_plotly_events import plotly_events
-import altair as alt
+import tensorflow as tf
 import sys
-print(sys.path)
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Verkehrsschilder
 sign_label = ["20 km/h", "30 km/h", "50 km/h", "60 km/h", "70 km/h", "80 km/h", "80 km/h Aufhebung", "100 km/h",
@@ -31,7 +28,6 @@ sign_label = ["20 km/h", "30 km/h", "50 km/h", "60 km/h", "70 km/h", "80 km/h", 
               "Ende des LKW-Überholverbotes"]
 
 model = keras.models.load_model("Traffic_Sign_Ai/Traffic_Sign_Net")
-
 
 @st.cache(show_spinner=False)
 def load_data(height=30, width=30):
@@ -79,20 +75,21 @@ def load_data(height=30, width=30):
 
     return images, label
 
-
+@st.cache(show_spinner=False)
 def load_model():
-    model = keras.models.load_model("Traffic_Sign_Net")
+    model = keras.models.load_model("Traffic_Sign_Ai/Traffic_Sign_Net")
+
     return model
 
 
 @st.cache(show_spinner=False)
 def load_test_data(height=30, width=30):
-    y_test = pd.read_csv(r'Data/Test.csv', ";")
+    y_test = pd.read_csv(r'Traffic_Sign_Ai/Data/Test.csv', ";")
     names = y_test['Filename'].to_numpy()
     y_test = y_test['ClassId'].values
     data = []
     for name in names:
-        image = cv2.imread(r'./Data/Test/' + name.replace('Test', ''))
+        image = cv2.imread(r'Traffic_Sign_Ai/Data/Test/' + name.replace('Test', ''))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image_from_array = Image.fromarray(image, 'RGB')
         size_image = image_from_array.resize((height, width))
@@ -103,7 +100,7 @@ def load_test_data(height=30, width=30):
 def load_meta_data(height=30, width=30):
     meta_data = []
     for f in range(43):
-        image = cv2.imread("./Data/Meta/" + str(f) + ".png")
+        image = cv2.imread("Traffic_Sign_Ai/Data/Meta/" + str(f) + ".png")
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image_from_array = Image.fromarray(image, 'RGB')
         meta_data.append(np.array(image_from_array))
@@ -118,16 +115,12 @@ def show_image(image):
                       margin=dict(l=0, r=0, b=0, t=0))
     return fig
 
-
-
-
-
 # Beispiele aus dem Dataset
-def show_example(images, labels, sep=False, ):
+def show_example(images, labels, sep=False, rand_seed=0):
     fig = plt.figure(figsize=(10, 10))
     columns = 3
     rows = 1
-    random.seed()
+    random.seed(rand_seed)
     if sep:
         columns += 1
         for i in range(1, rows * 4 + 1, 4):
@@ -168,16 +161,21 @@ def show_bias(labels):
     st.plotly_chart(plotly_fig, use_container_width=True)
 
 @st.cache(show_spinner=False)
-def show_correlation(test_images, y_test):
-    x_test = np.array(test_images)
-    x_test = x_test.astype('float32') / 255
-    pred = model.predict(x_test)
+def show_correlation(test_images=None, test_labels=None, preprocessed=False, predictions=None):
+    if not preprocessed:
+        test_images = np.array(test_images)
+        test_images = test_images.astype('float32') / 255
 
-    predictions = []
-    for i in pred:
-        predictions.append(i.argmax())
+        #st.write(test_images.shape)
+        pred = model.predict(test_images)
+        predictions = []
+        for i in pred:
+            predictions.append(i.argmax())
 
-    cm = confusion_matrix(y_test, predictions)
+    else:
+        pred = predictions
+
+    cm = confusion_matrix(test_labels, predictions)
     df_cm = pd.DataFrame(cm, index=[i for i in sign_label],
                          columns=[i for i in sign_label])
     df_perc = pd.DataFrame()
@@ -192,27 +190,52 @@ def show_correlation(test_images, y_test):
                       margin=dict(l=0,r=0,b=0,t=10))
     return fig, df_perc
 
-def make_prediction(images, meta_images):
-    test_images = np.array(images)
+def make_prediction(image, image_label=None ,pred_size= 11, resize=False, one_hot=False):
+    test_images = np.array(image)
     image = test_images.astype('float32') / 255
+    image = image.reshape(1, 30, 30, 3)
+    image = tf.cast(image, tf.float32)
+
     pred = model.predict(image)
+    if one_hot:
+        label = tf.one_hot(image_label, pred.shape[-1])
+        one_hot_labels = tf.reshape(label, (1, pred.shape[-1]))
 
-    x = random.randint(0, 2000)
-    pred_df = pd.DataFrame({"Signs": sign_label, "Predictions": np.round(pred[x], 2)})
+    pred_df = pd.DataFrame({"Signs": sign_label, "Prediction (%)": np.round(pred[0], 5)*100})
+    pred_large_df = pred_df.loc[pred_df["Prediction (%)"].nlargest(pred_size).index]
 
-    input_fig = px.imshow(test_images[x])
-    meta_fig = px.imshow(meta_images[np.argmax(pred[x])])
-    pie_fig = px.pie(pred_df, values="Predictions", names="Signs")
-
+    input_fig = px.imshow(test_images)
     input_fig.update_layout(coloraxis_showscale=False)
+    input_fig.update_layout(margin=dict(l=0, b=0, r=0, t=0, pad=0))
     input_fig.update_xaxes(showticklabels=False)
     input_fig.update_yaxes(showticklabels=False)
+    input_fig.update_layout(hovermode=False)
+    if resize:
+        input_fig.update_layout(autosize=False, width=200, height=200)
 
-    meta_fig.update_layout(coloraxis_showscale=False)
-    meta_fig.update_xaxes(showticklabels=False)
-    meta_fig.update_yaxes(showticklabels=False)
+    if one_hot:
+        return input_fig, pred_large_df, one_hot_labels
+    else:
+        return input_fig, pred_large_df
 
-    pie_fig.update_traces(textposition='inside')
+def model_predict(img_file_buffer):
+    height = 30
+    width = 30
 
-    return input_fig, meta_fig, pie_fig
+    y = 0
+
+    # To read image file buffer with OpenCV:
+    bytes_data = img_file_buffer.getvalue()
+    cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
+    x = int((cv2_img.shape[1] - cv2_img.shape[0]) / 2)
+    cv2_img = cv2_img[y:y + cv2_img.shape[0], x:x + cv2_img.shape[0]]
+    cv2_img = cv2.resize(cv2_img, (height, width))
+    cv2_img = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2RGB)
+
+    input_fig, pred_large_df = make_prediction(cv2_img)
+
+    return input_fig, pred_large_df
+
+
+
 

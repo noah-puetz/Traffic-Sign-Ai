@@ -1,72 +1,60 @@
-import streamlit as st
-import ai_tools
-from streamlit_option_menu import option_menu
-from streamlit_plotly_events import plotly_events
+from ai_tools import *
+from PIL import Image
 
 # Streamlit main page configuration
 st.set_page_config(page_title="Traffic Sign AI",
                    page_icon="🚦",
-                   layout="wide",
+                   layout="centered",
                    initial_sidebar_state="expanded",
                    menu_items={
-                       'Get Help': 'https://www.extremelycoolapp.com/help',
-                       'Report a bug': "https://www.extremelycoolapp.com/bug",
-                       'About': "# This is a header. This is an *extremely* cool app!"
+                       'About': "This Webapp was made by Noah Pütz"
                    })
 
-st.title("Adverserial Attacks")
-st.header("🚦 Manipulation of a Traffic Sign Recognition AI")
+st.title("Manipulation of a Traffic Sign Recognition AI 🤖")
+st.subheader("Project by Noah Pütz")
+col1, col2, col3 = st.columns([10, 1, 9])
+with col1:
+    """**Welcome!** 👋"""
+with col2:
+    url = "https://www.linkedin.com/in/noah-puetz/"
+    st.image(
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/640px"
+        "-LinkedIn_logo_initials.png",
+        width=20)
+with col3:
+    st.write("Check me out on [**LinkedIn**](%s)" % url)
 
-'''An adversarial attack is a deliberate manipulation of input to an AI by an attacker in 
-order to provoke an erroneous output from the AI. It is important to note that the 
-manipulation has no effect on human perception, but only on AI processes. 
-In most cases, the human eye does not notice any difference between a manipulated 
-and an original image. In this context, there is often talk of "optical illusions" 
-for artificial intelligences.'''
+col1, col2, = st.columns([10, 10])
+with col1:
+    '''
+    This webpage demonstrates how to perform an Adversarial Attack using a street sign recognition AI as an example. 
+    First, the page "Traffic Sign AI" explains the actual AI, i.e. the goal of the attack. Then, on the page "Adverserial 
+    Attack", the execution of the attack is described. 
+    '''
+    '''The code and a report were developed in the course of a project at the University of Applied Sciences Cologne 
+    in 2020. In 2022, I took up the project again to publish it as a streamlit web app. You can download the original 
+    report here (by now it is only available in german). '''
+    with open("Traffic_Sign_Ai/Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf", "rb") as pdf_file:
+        PDF = pdf_file.read()
 
+    st.download_button(label="📥 Download the Project Report (german)",
+                       data=PDF,
+                       file_name='Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf',)
+    """If you would like to know more about me, you can either visit my LinkedIn, download my CV or contact me via 
+    mail:
+    """
+    """
+    📧 noah.c.puetz@gmail.com 
+    """
+    with open("Traffic_Sign_Ai/CV_Noah_Puetz.pdf", "rb") as pdf_file:
+        PDF = pdf_file.read()
 
+    st.download_button(label="📥 Download my CV (english)",
+                       data=PDF,
+                       file_name='Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf', )
 
-
-selected = option_menu(
-    menu_title = None,
-    options=["Classification AI", "Adverserial Attack"],
-    icons=["stoplights","stoplights-fill"],
-    orientation = "horizontal"
-)
-
-images, labels = ai_tools.load_data()
-test_images, test_labels = ai_tools.load_test_data()
-meta_images = ai_tools.load_meta_data()
-
-if selected == "Classification AI":
-    with st.expander("⛔ Beispiele aus dem Datenset"):
-        example_button = st.button("Show random examples of the Dataset")
-        ai_tools.show_example(images, labels)
-
-    with st.expander("⛔ Bias of the Dataset"):
-        ai_tools.show_bias(labels)
-
-    with st.expander("⛔ Confusion Matrix"):
-
-        col1, col2 = st.columns([6,2])
-        with col1:
-            corr,df_perc = ai_tools.show_correlation(test_images, test_labels)
-            selected_points = plotly_events(corr)
-            y = selected_points[0]["pointNumber"][0]
-            x = selected_points[0]["pointNumber"][1]
-            x_name = selected_points[0]["x"]
-            y_name = selected_points[0]["y"]
-        with col2:
-            st.subheader("Confusion:")
-            st.write("Between: "+str(selected_points[0]["x"]))
-            st.image(meta_images[x])
-            st.write("And: "+str(selected_points[0]["y"]))
-            st.image(meta_images[y])
-            st.write("Classified: "+str(round(df_perc[x_name][y_name],2)))
-
-    with st.expander("⛔ Make a Prediction"):
-        pass
-
-if selected == "Adverserial Attack":
-    pass
-
+    """
+    I appreciate any feedback and have fun on the website! 😊
+    """
+with col2:
+    st.image("Traffic_Sign_Ai/Data/Noah_Puetz_vertical.jpeg")
