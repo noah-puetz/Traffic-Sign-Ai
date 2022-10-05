@@ -22,16 +22,16 @@ sign_label = ["20 km/h","30 km/h","50 km/h","60 km/h","70 km/h","80 km/h","80 km
           "Geradeaus oder Linksabbiegen", "Hindernis rechts umfahren", " Hindernis links umfahren", "Kreisverkehr", "Ende des Überholverbotes",
           "Ende des LKW-Überholverbotes"]
 
-model = keras.models.load_model("Traffic_Sign_Ai/Traffic_Sign_Net")
+model = keras.models.load_model("Traffic_Sign_Net")
 
 @st.cache(show_spinner=False)
 def load_test_data(height=30, width=30):
-    y_test = pd.read_csv(r'Traffic_Sign_Ai/Data/Test.csv', ";")
+    y_test = pd.read_csv(r'Data/Test.csv', ";")
     names = y_test['Filename'].to_numpy()
     y_test = y_test['ClassId'].values
     data = []
     for name in names:
-        image = cv2.imread(r'Traffic_Sign_Ai/Data/Test/' + name.replace('Test', ''))
+        image = cv2.imread(r'Data/Test/' + name.replace('Test', ''))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image_from_array = Image.fromarray(image, 'RGB')
         size_image = image_from_array.resize((height, width))
@@ -46,7 +46,7 @@ def adversarial_pattern(image, label, height=30, width=30, channels=3):
     image = test_images.astype('float32') / 255
     image = image.reshape(1, 30, 30, 3)
     image = tf.cast(image, tf.float32)
-    model = keras.models.load_model("Traffic_Sign_Ai/Traffic_Sign_Net")
+    model = keras.models.load_model("Traffic_Sign_Net")
 
     with tf.GradientTape() as tape:
         tape.watch(image)
@@ -126,14 +126,14 @@ def giant_attack(dataset_images, dataset_labels, iterations=False, max_iteration
     return attacked_dataset
 
 def load_adverserial_images():
-    with open("/Users/noahpuetz/PycharmProjects/Traffic_Sign_AI_Clean/Traffic_Sign_Ai/adversarial_images"
+    with open("adversarial_images"
             , "rb") as fp:
         adverserial_images = pickle.load(fp)
 
     return adverserial_images
 
 def load_adverserial_predictions():
-    with open("/Users/noahpuetz/PycharmProjects/Traffic_Sign_AI_Clean/Traffic_Sign_Ai/adversarial_predictions"
+    with open("adversarial_predictions"
             , "rb") as fp:
         adverserial_predictions = pickle.load(fp)
 

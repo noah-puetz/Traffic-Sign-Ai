@@ -83,7 +83,7 @@ the prediction. """
 img_url="https://upload.wikimedia.org/wikipedia/commons/6/63/Typical_cnn.png"
 st.image(img_url,caption="Image by Wikipedia: https://de.wikipedia.org/wiki/Convolutional_Neural_Network")
 with st.expander("See the tensorflow generated summary of the model"):
-    model = keras.models.load_model("Traffic_Sign_Ai/Traffic_Sign_Net")
+    model = keras.models.load_model("Traffic_Sign_Net")
     model.summary(print_fn=lambda x: st.text(x))
 
 
