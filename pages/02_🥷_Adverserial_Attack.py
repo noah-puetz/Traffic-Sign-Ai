@@ -122,8 +122,6 @@ with col1:
 
     config = {'displayModeBar': False}
     st.plotly_chart(rand_fig, use_container_width=True, config=config)
-    st.write("Prediction on the original Image:")
-    st.table(pred_rand_df)
 
 with col2:
     st.header("")
@@ -138,10 +136,6 @@ with col3:
 
     st.session_state['Perturbation'] = adversarial_pattern(image, one_hot)
     st.pyplot(generate_noise_image(st.session_state['Perturbation']))
-    st.session_state['Amplifier'] = st.slider("2️⃣ Noise Amplification",
-                                              min_value= 0.0,
-                                              max_value=0.5,
-                                              step=0.01)
 
 with col4:
     st.header("")
@@ -162,8 +156,22 @@ with col5:
 
     adver_fig, pred_adver_df = adverserial_prediction(st.session_state['Adverserial_image'],pred_size=3 , resize=True)
     st.plotly_chart(adver_fig, use_container_width=True, config=config)
+
+col1, col2, col3, col4, col5 = st.columns([4, 1, 4, 1, 4])
+with col1:
+    st.write("Prediction on the original Image:")
+    st.table(pred_rand_df)
+
+with col3:
+    st.session_state['Amplifier'] = st.slider("2️⃣ Noise Amplification",
+                                              min_value=0.0,
+                                              max_value=0.5,
+                                              step=0.01)
+
+with col5:
     st.write("Prediction on the manipulated Image:")
     st.table(pred_adver_df)
+
 
 st.info("👆 Not all attacks are always successful, for some images the noise may have to become too strong to have an "
         "effect on the neural network.")
