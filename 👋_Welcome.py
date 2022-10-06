@@ -2,7 +2,7 @@ from ai_tools import *
 from PIL import Image
 
 # Streamlit main page configuration
-st.set_page_config(page_title="Adverserial Attack",
+st.set_page_config(page_title="Adversarial Attack",
                    page_icon="🚦",
                    layout="centered",
                    initial_sidebar_state="expanded",
