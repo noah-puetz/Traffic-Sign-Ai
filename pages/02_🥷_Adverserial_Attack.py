@@ -108,13 +108,14 @@ In the following section you can carry out an adverserial attack yourself in a f
 
 col1, col2, col3, col4, col5 = st.columns([4, 1, 4, 1, 4])
 with col1:
-
     select_button = st.button("1️⃣ Select random Sign")
 
     if select_button:
         random.seed()
-        st.session_state['Rand_image'] = random.randint(0, 12000) #408
+        st.session_state['Rand_image'] = random.randint(0, 12000)  # 408
 
+col1, col2, col3, col4, col5 = st.columns([4, 1, 4, 1, 4])
+with col1:
     image = test_images[st.session_state['Rand_image']]          #x_test
     image_label = test_labels[st.session_state['Rand_image']]    #y_test
 
