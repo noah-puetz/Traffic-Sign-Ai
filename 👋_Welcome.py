@@ -39,7 +39,7 @@ with col1:
 
     st.download_button(label="📥 Download the Project Report (german)",
                        data=PDF,
-                       file_name='PDFs/Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf', )
+                       file_name='Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf', )
     """If you would like to know more about me, you can either visit my LinkedIn, download my CV or contact me via 
     mail:
     """
@@ -51,7 +51,7 @@ with col1:
 
     st.download_button(label="📥 Download my CV (english)",
                        data=PDF,
-                       file_name='PDFs/Individuelle_Projektarbeit_Adversarial_Attacks_Noah_Pütz.pdf', )
+                       file_name='CV_Noah_Puetz.pdf', )
 
     """
     I appreciate any feedback and have fun on the website! 😊
