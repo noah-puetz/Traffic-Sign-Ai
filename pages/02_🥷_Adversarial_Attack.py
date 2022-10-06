@@ -135,7 +135,7 @@ with col3:
 
 with col4:
     st.header("")
-    st.header("🟰️")
+    st.header("➡️")
 
 with col5:
     image_adver = np.array(image)
