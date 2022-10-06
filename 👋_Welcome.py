@@ -56,5 +56,6 @@ with col1:
     """
     I appreciate any feedback and have fun on the website! 😊
     """
+    st.info("👆 Currently, both a light and dark version of the app are available. However, I would recommend the light version! ")
 with col2:
     st.image("Data/Noah_Puetz_vertical.jpeg")
