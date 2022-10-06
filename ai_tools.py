@@ -223,12 +223,18 @@ def model_predict(img_file_buffer):
     width = 30
 
     y = 0
+    x = 0
 
     # To read image file buffer with OpenCV:
     bytes_data = img_file_buffer.getvalue()
     cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
-    x = int((cv2_img.shape[1] - cv2_img.shape[0]) / 2)
-    cv2_img = cv2_img[y:y + cv2_img.shape[0], x:x + cv2_img.shape[0]]
+    if cv2_img.shape[1] > cv2_img.shape[0]:
+        x = int((cv2_img.shape[1] - cv2_img.shape[0]) / 2)
+        cv2_img = cv2_img[y:y + cv2_img.shape[0], x:x + cv2_img.shape[0]]
+    else:
+        y = int((cv2_img.shape[0] - cv2_img.shape[1]) / 2)
+        cv2_img = cv2_img[y:y + cv2_img.shape[0], x:x + cv2_img.shape[0]]
+
     cv2_img = cv2.resize(cv2_img, (height, width))
     cv2_img = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2RGB)
 
