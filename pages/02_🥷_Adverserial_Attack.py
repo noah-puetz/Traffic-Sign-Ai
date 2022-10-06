@@ -229,8 +229,8 @@ notebook from my github. I hope you were able to learn a bit and I am happy abou
 #     st.download_button(label="📥 Download the Adversarial Attack Notebook",
 #                        data="Adversarial_Attacks.ipynb",
 #                        file_name='Adversarial_Attacks.ipynb', )
-col1, col2, col3 = st.columns([2,1,2])
-with col2:
-    but = st.button("You have made it to the end!")
-    if but:
-        st.balloons()
+# col1, col2, col3 = st.columns([2,1,2])
+# with col2:
+#    but = st.button("You have made it to the end!")
+#    if but:
+#        st.balloons()
