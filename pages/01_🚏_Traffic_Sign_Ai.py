@@ -36,7 +36,7 @@ which provides the basis for training the attacked DNN is called the "German Tra
 Benchmark" or GTSRB. It was first presented as part of a challenge at the International Joint Conference on Neural Networks (IJN). 
 on Neural Networks" (IJCNN) 2011 and contains more than 50,000 images and 43 classes. """
 
-st.info("The sources of all information and information that goes beyond what is written here can be found in the "
+st.info("👆 The sources of all information and information that goes beyond what is written here can be found in the "
         "project report (downloadable on the first page).")
 
 st.header("⛔️ Example of the Dataset")
