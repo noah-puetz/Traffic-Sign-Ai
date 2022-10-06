@@ -126,21 +126,14 @@ with col1:
 
 with col2:
     st.header("")
-    st.header("")
-    st.header("")
     st.header("➕️")
 
 with col3:
-
-    st.header("")
-    st.subheader("")
 
     st.session_state['Perturbation'] = adversarial_pattern(image, one_hot)
     st.pyplot(generate_noise_image(st.session_state['Perturbation']))
 
 with col4:
-    st.header("")
-    st.header("")
     st.header("")
     st.header("🟰️")
 
@@ -151,9 +144,6 @@ with col5:
     image_adver = tf.cast(image_adver, tf.float32)
 
     st.session_state['Adverserial_image'] = image_adver + st.session_state['Perturbation'] * st.session_state['Amplifier']
-
-    st.header("")
-    st.subheader("")
 
     adver_fig, pred_adver_df = adverserial_prediction(st.session_state['Adverserial_image'],pred_size=3 , resize=True)
     st.plotly_chart(adver_fig, use_container_width=True, config=config)
